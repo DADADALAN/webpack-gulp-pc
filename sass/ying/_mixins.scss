@@ -1,0 +1,208 @@
+@charset "UTF-8";
+
+//引入其他mixin模块
+@import "mod/flex",// 伸缩盒子
+        "mod/placeholder",//input占位符号
+        "mod/triangle",//三角icon
+        "mod/firefox",//firefox hack
+        "mod/boxclamp",//控制文字行数溢出省略号
+        "mod/breakpoint",//响应式页面断点
+        "mod/rem";//rem单位化
+
+/* 
+ * [inline-block 设置inline-block，不支持inline-block实现相似表现的布局]
+ * 
+ */  
+@mixin inline-block{
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+/* 
+ * [clearfix 普通清浮动方法，兼容全浏览器]
+ * 
+ */  
+@mixin clearfix{
+  *zoom: 1;
+  &:before,
+  &:after{
+    content: "";
+    display: table;
+    line-height: 0;
+  }
+  &:after{
+    clear: both;
+  }
+}
+
+/* 
+ * [ellipsis 传入宽度参数，超出宽度显示省略号]
+ * 
+ */  
+%ellipsis-basic{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; 
+}
+@mixin ellipsis($width:100%) {
+  @extend %ellipsis-basic;
+  width:$width;
+}
+
+/* 
+ * [min-height 兼容ie6最小高度]
+ * 
+ */  
+@mixin min-height($height) {
+  min-height: $height;
+  height: auto !important;
+  _height: $height;
+}
+
+/* 
+ * [bgcolor-alpha 黑色背景色半透明]
+ * 
+ */  
+@mixin bgcolor-alpha($bgcolor: rgba(0,0,0,.5)){
+  color:#fff;
+  @if $filter{
+    filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#{ie-hex-str($bgcolor)}', endColorstr='#{ie-hex-str($bgcolor)}');
+  }@else{
+    background-color: #333;
+  }
+  background-color:$bgcolor;
+}
+%bgcolor-alpha{
+  @include bgcolor-alpha;
+}
+
+/* 
+ * [opacity lte8使用filter兼容]
+ * 
+ */  
+@mixin opacity($opacity:50) {
+  opacity: $opacity / 100;
+  @if $filter{
+    filter: alpha(opacity=$opacity);
+  }
+}
+%opacity{
+  @include opacity;
+}
+
+/* 
+ * [webkitbox 设置横向纵向弹性盒子]
+ * 
+ */  
+@mixin webkitbox( $type : 1 ){
+  display: -webkit-box;
+  @if $type == 1{ -webkit-box-orient: horizontal; }//水平
+  @if $type == 2{ -webkit-box-orient: vertical; }//垂直
+}
+
+/* 
+ * [flex 设置盒子大小]
+ * 
+ */  
+@mixin flex($flex){
+  -webkit-box-flex: $flex;
+}
+
+/* 
+ * [reset-filter Reset gradient filters for IE]
+ * 
+ */  
+%reset-filter{
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+/* 
+ * [px2rem rem单位转化]
+ * @param     name [description]
+ * @other     [description]
+ * @return    [description]
+ * 
+ */  
+@function px2rem($size){
+  @return $size / 20 / 2 + rem;
+}
+@function -px2rem($size){
+    @return - $size / 20 / 2 + rem;
+}
+
+@function r2n($size){
+  @return $size / 2 + px;
+}
+
+
+/* 
+ * [其他方法]
+ * 
+ */  
+@mixin size($value) {
+  width: $value;
+  height: $value;
+}
+@mixin size($width, $height) {
+  width: $width;
+  height: $height;
+}
+@mixin hide-text{
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@mixin break {
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+}
+
+@mixin pre {
+  white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+}
+@mixin wrap {
+  text-wrap: wrap;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  word-wrap: break-word;
+}
+// http://www.hicss.net/solve-change-line-in-css/
+@mixin nowrap {
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+/* 旋转 */
+@mixin rotate($value:180deg){
+  -webkit-transform: rotate($value);
+     -moz-transform: rotate($value);
+      -ms-transform: rotate($value);
+          transform: rotate($value);
+}
+
+/* css角标 */
+@mixin u-arrow-left($value:6px,$bordercolor:#fff){
+  border-width: $value;
+  border-color: transparent $bordercolor transparent transparent;
+  border-style: solid;
+}
+
+// Gradients  添加渐变过渡函数，20140110 add by petsa
+@mixin gradient($color-form, $color-to) {
+  background: $color-form; // Old browsers
+  background: -moz-linear-gradient(top, $color-form 0%, $color-to 100%); // FF3.6+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$color-form), color-stop(100%,$color-to)); // Chrome,Safari4+
+  background: -webkit-linear-gradient(top, $color-form 0%, $color-to 100%); // Chrome10+,Safari5.1+
+  background: -o-linear-gradient(top, $color-form 0%, $color-to 100%); // Opera 11.10+
+  background: -ms-linear-gradient(top, $color-form 0%, $color-to 100%); // IE10+
+  background: linear-gradient(to bottom, $color-form 0%, $color-to 100%); // W3C
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$color-form', endColorstr='$color-to',GradientType=0 ); // IE6-9
+
+}
+

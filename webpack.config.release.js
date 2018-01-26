@@ -18,7 +18,7 @@ rd.eachFileFilterSync(entryPath, /\.js$/, function (f, s) {
 
 module.exports = {
     // devtool: "source-map",  
-    watch: true,
+    // watch: true,
     entry: entryPathConfig ,
     output: {   
         filename: '[name].js'

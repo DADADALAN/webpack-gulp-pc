@@ -1,0 +1,1 @@
+hi,我是个测试模板，arttemplate
